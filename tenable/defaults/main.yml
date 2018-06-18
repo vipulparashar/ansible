@@ -1,0 +1,12 @@
+---
+
+nessus_download_page: https://www.tenable.com/downloads/nessus-agents
+
+nessus_linux_tmp: /tmp
+
+nessus_version: 7.1.0
+
+nessus_agent_host: cloud.tenable.com
+nessus_agent_port: 443
+nessus_agent_key: "f0daa2817e326ea6216bef784e6eec20f081e5c04454d2772a0649a02470e327"
+nessus_agent_group: TZ3-IN

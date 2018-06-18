@@ -1,0 +1,31 @@
+---
+
+# Bypass download automation prevention
+- name: Load Nessus Agent download page.
+  local_action:
+    module: get_url
+    url: "{{ nessus_download_page }}"
+    dest: "{{ nessus_linux_tmp }}/nessus_download.html"
+    force: yes
+  become: false
+
+# The Nessus download page has invalid XML that xpath won't parse.
+# This narrows to just the timecheck line we care about.
+- name: Grep download-modal-link line and make a single line file with it.
+  local_action:
+    module: "shell grep download-modal-link {{ nessus_linux_tmp }}/nessus_download.html | grep '{{ data_file_name }}' | sed 's/.* data-download-id=\"\\([0-9]*\\)\".*/\\1/'"
+  become: false
+  register: nessus_download_id
+  ignore_errors: "{{ ansible_check_mode }}"
+
+- debug:
+    var: nessus_download_id
+
+- name: Cleanup local tmp download.
+  local_action:
+    module: file
+    path: "{{ item }}"
+    state: absent
+  with_items:
+    - "{{ nessus_linux_tmp }}/nessus_download.html"
+  become: false
